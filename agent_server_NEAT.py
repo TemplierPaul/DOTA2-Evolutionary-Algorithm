@@ -145,7 +145,13 @@ class ServerHandler(BaseHTTPRequestHandler):
             # get data as json, then save to list
             content = self.getContent().decode("utf-8")
             global features
-            features = json.loads(content)
+            features_list = json.loads(content)
+
+            if features_list[0] != 'id':
+                features = features_list
+            else:
+                keep_server_up = False
+                print("Last Feature Array Reached")
             print(features)
 
             """
@@ -165,8 +171,8 @@ def start_server(decision_func, eval_func):
     agentHandler = HTTPServer((opts.agentIp, int(opts.agentPort)), ServerHandler)
 
     # Set GA functions
-    agentHandler.decision_func = decision_func
-    agentHandler.eval_func = eval_func
+    agentHandler._decision_func = decision_func
+    agentHandler._eval_func = eval_func
 
     thread = threading.Thread(target=agentHandler.serve_forever)
     thread.daemon = True
@@ -194,11 +200,11 @@ def start_server(decision_func, eval_func):
     breezyIp = opts.breezyIp
     breezyPort = opts.breezyPort
 
+    global features
+
     # serve until told to stop (end of the game)
     global keep_server_up
     keep_server_up = True
-
-    global features
 
     while keep_server_up:
         pass
