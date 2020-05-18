@@ -4,6 +4,8 @@ import neat
 import visualize
 import numpy as np
 
+from agent_server_NEAT import start_server
+
 # 2-input XOR inputs and expected outputs.
 xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
 xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]
@@ -11,12 +13,25 @@ xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
-        genome.fitness = 4.0
+        genome.fitness = 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        for xi, xo in zip(xor_inputs, xor_outputs):
-            output = net.activate(xi)
-            # print(np.argmax(output))
-            genome.fitness -= (output[0] - xo[0]) ** 2
+
+        def decision(features):
+            output = net.activate(features)
+            return np.argmax(output)
+
+        """
+        Evaluation function: distance from origin.
+        We add 10000 units to have positive values.
+        """
+
+        def eval(features):
+            x = features[26] + 10000
+            y = features[27] + 10000
+            return np.sqrt(x ** 2 + y ** 2)
+
+        fitness = start_server(decision_func=decision, eval_func=eval)
+        genome.fitness = fitness
 
 
 def run(config_file):
