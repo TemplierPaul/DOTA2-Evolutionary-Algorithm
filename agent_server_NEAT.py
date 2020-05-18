@@ -143,6 +143,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             print("Received features.")
             # get data as json, then save to list
             content = self.getContent().decode("utf-8")
+            global features
             features = json.loads(content)
             print(features)
 
@@ -196,8 +197,10 @@ def start_server(decision_func, eval_func):
     global keep_server_up
     keep_server_up = True
 
-    while keep_server_up:
-        pass
+    global features
+
+    if not keep_server_up:
+        return eval_func(features)
 
 
 if __name__ == "__main__":
@@ -207,7 +210,9 @@ if __name__ == "__main__":
 
 
     def eval(*args):
+        print(*args)
         return 0
 
 
-    start_server(decision_func=decision, eval_func=eval)
+    fitness = start_server(decision_func=decision, eval_func=eval)
+    print("\nFITNESS\n", fitness)
