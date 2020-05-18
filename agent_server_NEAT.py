@@ -22,11 +22,11 @@ Handles HTTP requests from the dota server.
 
 
 class ServerHandler(BaseHTTPRequestHandler):
-    def __init__(self, request, client_address, server):
-        BaseHTTPRequestHandler.__init__(self, request, client_address, server)
-        self._decision_func = None
-        self._eval_func = None
-        print("ServerHandler init done")
+    # def __init__(self, request, client_address, server):
+    #     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
+    #     self._decision_func = None
+    #     self._eval_func = None
+    #     print("ServerHandler init done")
 
     """
     Decision function getter and setter
@@ -34,8 +34,8 @@ class ServerHandler(BaseHTTPRequestHandler):
 
     @property
     def decision_func(self):
-        assert self._decision_func is not None
-        return self._decision_func
+        # assert self._decision_func is not None
+        return self.server._decision_func
 
     @decision_func.setter
     def decision_func(self, func):
@@ -47,8 +47,8 @@ class ServerHandler(BaseHTTPRequestHandler):
 
     @property
     def eval_func(self):
-        assert self._eval_func is not None
-        return self._eval_func
+        # assert self._eval_func is not None
+        return self.server._eval_func
 
     @eval_func.setter
     def eval_func(self, func):
