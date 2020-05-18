@@ -98,10 +98,10 @@ class ServerHandler(BaseHTTPRequestHandler):
                     "agent": "Sample Random Agent",
                     "size": 5
                 }
-                response = requests.post(url=startUrl, data=json.dumps(startData))
+                # response = requests.post(url=startUrl, data=json.dumps(startData))
                 
             # send whatever to server
-            self.postResponse(json.dumps({"fitness":42}))
+            # self.postResponse(json.dumps({"fitness":42}))
             
         else: # relay path gives features from current game to agent
             """
