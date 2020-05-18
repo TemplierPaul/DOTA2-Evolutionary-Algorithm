@@ -22,10 +22,11 @@ Handles HTTP requests from the dota server.
 
 
 class ServerHandler(BaseHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super(ServerHandler, self).__init__(*args, **kwargs)
+    def __init__(self, request, client_address, server):
+        BaseHTTPRequestHandler.__init__(self, request, client_address, server)
         self._decision_func = None
         self._eval_func = None
+        print("ServerHandler init done")
 
     """
     Decision function getter and setter
@@ -87,6 +88,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     """
 
     def do_POST(self):
+        global keep_server_up
         print(self.path)
 
         if self.path == "/update":
@@ -129,7 +131,6 @@ class ServerHandler(BaseHTTPRequestHandler):
                 """
                 Stop server
                 """
-                global keep_server_up
                 keep_server_up = False
 
             # send whatever to server
