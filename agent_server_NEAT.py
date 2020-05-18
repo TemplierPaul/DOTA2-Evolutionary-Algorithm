@@ -199,8 +199,10 @@ def start_server(decision_func, eval_func):
 
     global features
 
-    if not keep_server_up:
-        return eval_func(features)
+    while keep_server_up:
+        pass
+
+    return eval_func(features)
 
 
 if __name__ == "__main__":
