@@ -18,7 +18,9 @@ def eval_genomes(genomes, config):
 
         def decision(features):
             output = net.activate(features)
-            return np.argmax(output)
+            action = int(np.argmax(output))
+            print(features[26], features[27], action)
+            return action
 
         """
         Evaluation function: distance from origin.
@@ -31,6 +33,7 @@ def eval_genomes(genomes, config):
             return np.sqrt(x ** 2 + y ** 2)
 
         fitness = start_server(decision_func=decision, eval_func=eval)
+        print("\nFitness:", fitness, "\n\n")
         genome.fitness = fitness
 
 
@@ -68,7 +71,7 @@ def run(config_file):
     visualize.plot_species(stats, view=True)
 
     p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4')
-    p.run(eval_genomes, 10)
+    p.run(eval_genomes, 1)
 
 
 if __name__ == '__main__':

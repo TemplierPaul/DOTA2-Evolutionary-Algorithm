@@ -79,8 +79,8 @@ class ServerHandler(BaseHTTPRequestHandler):
     """
 
     def do_GET(self):
-        print(self.path)
-        print("Received GET request.")
+        # print(self.path)
+        # print("Received GET request.")
         self.postResponse(json.dumps({"response": "Hello"}))
 
     """
@@ -89,7 +89,7 @@ class ServerHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         global keep_server_up
-        print(self.path)
+        # print(self.path)
 
         if self.path == "/update":
             """
@@ -99,9 +99,9 @@ class ServerHandler(BaseHTTPRequestHandler):
             global breezyIp
             global breezyPort
 
-            print("Game done.")
+            # print("Game done.")
             content = self.getContent().decode("utf-8")
-            print(content)
+            # print(content)
             rundata = json.loads(content)
 
             # webhook to start new game in existing set of games
@@ -141,7 +141,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             Relay route is called, gives features from the game for the agent.
             """
 
-            print("Received features.")
+            # print("Received features.")
             # get data as json, then save to list
             content = self.getContent().decode("utf-8")
             global features
@@ -152,7 +152,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             else:
                 keep_server_up = False
                 print("Last Feature Array Reached")
-            print(features)
+            # print(features)
 
             """
             Agent code to determine action from features would go here.
