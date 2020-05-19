@@ -75,16 +75,16 @@ class DotaServerManager():
             "size": 1
         }
         # tell breezy server to start the run
-        # response = requests.post(
-        #     url="http://{}:{}/run/".format(opts.breezyIp, opts.breezyPort),
-        #     data=json.dumps(startData))
-        #
-        # print("Start Game", response)
+        response = requests.post(
+            url="http://{}:{}/run/".format(opts.breezyIp, opts.breezyPort),
+            data=json.dumps(startData))
+
+        print("Start Game", response)
 
     def stop_game(self):
-        # response = requests.delete(
-        #     url="http://{}:{}/run/active".format(opts.breezyIp, opts.breezyPort))
-        # print("Stop Game", response)
+        response = requests.delete(
+            url="http://{}:{}/run/active".format(opts.breezyIp, opts.breezyPort))
+        print("Stop Game", response)
         self.running_game = False
 
     def play_game(self):
