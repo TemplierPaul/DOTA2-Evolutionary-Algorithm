@@ -4,8 +4,8 @@ import neat
 import visualize
 import numpy as np
 
-from agent_server_NEAT import start_server
-from fitness_evaluator import FitnessEvaluator
+from DOTA_Server import DotaServerManager
+
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -18,7 +18,10 @@ def eval_genomes(genomes, config):
             action = int(np.argmax(output))
             return action
 
-        fitness = start_server(decision_func=decision, fitness_evaluator=FitnessEvaluator())
+        global server_manager
+        print(server_manager)
+        fitness = server_manager.play_game(decision)
+
         print("\nFitness:", fitness, "\n\n")
         genome.fitness = fitness
 
@@ -44,20 +47,11 @@ def run(config_file):
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
 
-    # Show output of the most fit genome against training data.
-    print('\nOutput:')
-    winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
-    for xi, xo in zip(xor_inputs, xor_outputs):
-        output = winner_net.activate(xi)
-        print("input {!r}, expected output {!r}, got {!r}".format(xi, xo, output))
-
-    node_names = {-1: 'A', -2: 'B', 0: 'A XOR B'}
-    visualize.draw_net(config, winner, True, node_names=node_names)
     visualize.plot_stats(stats, ylog=False, view=True)
     visualize.plot_species(stats, view=True)
 
-    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4')
-    p.run(eval_genomes, 1)
+    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4')
+    # p.run(eval_genomes, 1)
 
 
 if __name__ == '__main__':
@@ -66,4 +60,6 @@ if __name__ == '__main__':
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward')
-    run(config_path)
+
+    with DotaServerManager() as server_manager:
+        run(config_path)

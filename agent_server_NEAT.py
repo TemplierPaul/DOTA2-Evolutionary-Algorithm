@@ -5,6 +5,8 @@ import threading
 import random
 import requests
 
+from fitness_evaluator import FitnessEvaluator
+
 parser = OptionParser()
 # the address of this agent server
 parser.add_option("-i", "--ip", type="string", dest="agentIp", default="127.0.0.1")
@@ -22,16 +24,10 @@ Handles HTTP requests from the dota server.
 
 
 class ServerHandler(BaseHTTPRequestHandler):
-    # def __init__(self, request, client_address, server):
-    #     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
-    #     self._decision_func = None
-    #     self._eval_func = None
-    #     print("ServerHandler init done")
-
     """
     Decision function getter and setter
     """
-
+    
     @property
     def decision_func(self):
         # assert self._decision_func is not None
@@ -42,17 +38,17 @@ class ServerHandler(BaseHTTPRequestHandler):
         self._decision_func = func
 
     """
-    Evaluation function setter and getter
+    Fitness evaluator getter and setter
     """
 
     @property
-    def eval_func(self):
-        # assert self._eval_func is not None
-        return self.server._eval_func
+    def fitness_evaluator(self):
+        # assert self._decision_func is not None
+        return self.server._fitness_evaluator
 
-    @eval_func.setter
-    def eval_func(self, func):
-        self._eval_func = func
+    @fitness_evaluator.setter
+    def fitness_evaluator(self, fe):
+        self._fitness_evaluator = fe
 
     """
     Helper function to get content passed with http request.
@@ -132,6 +128,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 Stop server
                 """
                 keep_server_up = False
+                return
 
             # send whatever to server
             # self.postResponse(json.dumps({"fitness":42}))
@@ -154,6 +151,12 @@ class ServerHandler(BaseHTTPRequestHandler):
                 print("Last Feature Array Reached")
             # print(features)
 
+            self.fitness_evaluator.frame_evaluation(features)
+
+            if self.fitness_evaluator.early_stop:
+                keep_server_up = False
+                return
+
             """
             Agent code to determine action from features would go here.
             """
@@ -161,7 +164,14 @@ class ServerHandler(BaseHTTPRequestHandler):
             self.postResponse(json.dumps({"actionCode": action}))
 
 
-def start_server(decision_func, eval_func):
+def stop_game():
+    response = requests.delete(
+        url="http://{}:{}/run/active".format(opts.breezyIp, opts.breezyPort))
+
+    print(response)
+
+
+def start_server(decision_func, fitness_evaluator):
     """
         Sets up and starts the Agent server and triggers the start of a run on the
         Breezy server.
@@ -172,7 +182,7 @@ def start_server(decision_func, eval_func):
 
     # Set GA functions
     agentHandler._decision_func = decision_func
-    agentHandler._eval_func = eval_func
+    agentHandler._fitness_evaluator = fitness_evaluator
 
     thread = threading.Thread(target=agentHandler.serve_forever)
     thread.daemon = True
@@ -192,8 +202,8 @@ def start_server(decision_func, eval_func):
     print(response)
 
     """
-        Declare variables global that you want the agent server to have access to.
-        """
+    Declare variables global that you want the agent server to have access to.
+    """
     global breezyIp
     global breezyPort
 
@@ -209,7 +219,11 @@ def start_server(decision_func, eval_func):
     while keep_server_up:
         pass
 
-    return eval_func(features)
+    stop_game()
+
+    thread.join()
+
+    return fitness_evaluator.final_evaluation()
 
 
 if __name__ == "__main__":
@@ -217,11 +231,7 @@ if __name__ == "__main__":
         print("%d Features" % len(arg))
         return random.randint(0, 29)
 
+    fitness_evaluator = FitnessEvaluator()
 
-    def eval(*args):
-        print(*args)
-        return 0
-
-
-    fitness = start_server(decision_func=decision, eval_func=eval)
+    fitness = start_server(decision_func=decision, fitness_evaluator=fitness_evaluator)
     print("\nFITNESS\n", fitness)
