@@ -14,7 +14,8 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
 
         def decision(features):
-            output = net.activate(features)
+            used_features = features[0:86]
+            output = net.activate(used_features)
             action = int(np.argmax(output))
             return action
 

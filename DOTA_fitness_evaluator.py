@@ -1,11 +1,14 @@
 import numpy as np
 
 """
-Dict {dota_time: minimum value for max_dist to continue the game
+Distance from the center it must have reached
 """
 MIN_DIST = {
-    60: 300,
-    120: 400
+    60: 6500,
+    120: 6000,
+    180: 5000,
+    240: 4000,
+    200: 2000
 }
 
 class FitnessEvaluator():
@@ -13,22 +16,22 @@ class FitnessEvaluator():
         self.fitness = 0
         self.last_features = []
         self.variables = {
-            'max_dist': 0
+            'min_dist': 0
         }
 
     """
-    Evaluate fitness at each frame
+    Evaluate fitness at each call
     """
     def frame_evaluation(self, features):
-        x = features[26] + 6700
-        y = features[27] + 6700
-        dist = np.sqrt(x ** 2 + y ** 2)
+        x = features[26]
+        y = features[27]
+        dist = np.sqrt(x ** 2 + y ** 2)  # Distance from the center
         dota_time = features[56]
 
-        self.variables['max_dist'] = max(self.variables['max_dist'], dist)
+        self.variables['min_dist'] = min(self.variables['min_dist'], dist)
 
         net_worth = features[23]
-        passive_gold = 0.7 * dota_time + 598  # 598 = start gold
+        passive_gold = 1.3 * dota_time + 598  # 598 = start gold
         self.fitness = net_worth - passive_gold
 
         # print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
@@ -43,7 +46,7 @@ class FitnessEvaluator():
     def early_stop(self):
         dota_time = self.last_features[56]
         for time, dist in MIN_DIST.items():
-            if dota_time > time and self.variables['max_dist'] <= dist:
+            if dota_time > time and self.variables['min_dist'] >= dist:
                 return True
         return False
 
@@ -52,7 +55,7 @@ class FitnessEvaluator():
     """
 
     def final_evaluation(self):
-        print("MAX DISTANCE", self.variables['max_dist'])
+        print("MIN DISTANCE", self.variables['min_dist'])
         print("NET WORTH", self.fitness)
         # self.fitness = self.variables['max_dist']
         return self.fitness
@@ -61,6 +64,6 @@ class FitnessEvaluator():
         self.fitness = 0
         self.last_features = []
         self.variables = {
-            'max_dist': 0
+            'min_dist': 0
         }
         print("FitnessEvaluator reset")
