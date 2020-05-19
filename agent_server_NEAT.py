@@ -128,6 +128,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 Stop server
                 """
                 keep_server_up = False
+                return
 
             # send whatever to server
             # self.postResponse(json.dumps({"fitness":42}))
@@ -154,6 +155,7 @@ class ServerHandler(BaseHTTPRequestHandler):
 
             if self.fitness_evaluator.early_stop:
                 keep_server_up = False
+                return
 
             """
             Agent code to determine action from features would go here.
@@ -218,6 +220,8 @@ def start_server(decision_func, fitness_evaluator):
         pass
 
     stop_game()
+
+    thread.join()
 
     return fitness_evaluator.final_evaluation()
 

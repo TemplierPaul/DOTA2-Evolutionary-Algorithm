@@ -26,9 +26,10 @@ class FitnessEvaluator():
         y = features[27] + 6700
         dist = np.sqrt(x ** 2 + y ** 2)
         dota_time = features[56]
-        print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
 
         self.variables['max_dist'] = max(self.variables['max_dist'], dist)
+
+        print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
         self.last_features = features
         return self.fitness
 
