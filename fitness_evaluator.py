@@ -1,5 +1,13 @@
 import numpy as np
 
+"""
+Dict {dota_time: minimum value for max_dist to continue the game
+"""
+MIN_DIST = {
+    120: 300,
+    240: 400
+}
+
 class FitnessEvaluator():
     def __init__(self):
         self.fitness = 0
@@ -28,8 +36,9 @@ class FitnessEvaluator():
     @property
     def early_stop(self):
         dota_time = self.last_features[56]
-        if dota_time > 2 * 60 and self.variables['max_dist'] <= 100:
-            return True
+        for time, dist in MIN_DIST.items():
+            if dota_time > time and self.variables['max_dist'] <= dist:
+                return True
         return False
 
     """
