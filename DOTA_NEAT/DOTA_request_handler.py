@@ -88,5 +88,5 @@ class DotaServerHandler(BaseHTTPRequestHandler):
             """
             Agent code to determine action from features would go here.
             """
-            action = self.server.manager.decision_func(features)
+            action = self.server.manager.decision_function(features)
             self.postResponse(json.dumps({"actionCode": action}))

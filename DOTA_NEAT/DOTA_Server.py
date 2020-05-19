@@ -1,12 +1,10 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import HTTPServer
 import json
 from optparse import OptionParser
 import threading
-import random
 import requests
-import time
 
-from DOTA_request_handler import DotaServerHandler
+from DOTA_NEAT.DOTA_request_handler import DotaServerHandler
 from fitness_evaluator import FitnessEvaluator
 
 parser = OptionParser()
@@ -85,27 +83,32 @@ class DotaServerManager():
         response = requests.delete(
             url="http://{}:{}/run/active".format(opts.breezyIp, opts.breezyPort))
         print("Stop Game", response)
-        self.running_game = False
 
-    def play_game(self):
-        def decision(*args, **kwargs):
-            print(args)
-            return 0
+    def play_game(self, decision=None):
+
+        if decision is None:
+            def decision(*args, **kwargs):
+                print(args)
+                return 0
 
         self.start_game(decision_func=decision)
 
-        while self.running_game == True:
+        while self.running_game:
             pass
 
         fitness = self.fitness_evaluator.final_evaluation()
         print("FITNESS:", fitness)
         return fitness
 
+    def __enter__(self):
+        self.start_server()
+
+    def __exit__(self):
+        self.stop_server()
+
 
 if __name__ == "__main__":
-    manager = DotaServerManager()
-    manager.start_server()
-    manager.play_game()
-    print("\n\nEND OF GAME 1\n\n")
-    manager.play_game()
-    manager.stop_server()
+    with DotaServerManager() as manager:
+        manager.play_game()
+        print("\n\nEND OF GAME 1\n\n")
+        manager.play_game()
