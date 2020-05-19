@@ -219,7 +219,7 @@ def start_server(decision_func, fitness_evaluator):
 
     stop_game()
 
-    return fitness_evaluator.final_evaluation(features)
+    return fitness_evaluator.final_evaluation()
 
 
 if __name__ == "__main__":

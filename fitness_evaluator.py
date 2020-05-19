@@ -4,8 +4,8 @@ import numpy as np
 Dict {dota_time: minimum value for max_dist to continue the game
 """
 MIN_DIST = {
-    120: 300,
-    240: 400
+    60: 300,
+    120: 400
 }
 
 class FitnessEvaluator():
@@ -15,6 +15,8 @@ class FitnessEvaluator():
         self.variables = {
             'max_dist': 0
         }
+        print("FitnessEvaluator created")
+        print("Max dist", self.variables['max_dist'])
 
     """
     Evaluate fitness at each frame
@@ -24,7 +26,7 @@ class FitnessEvaluator():
         y = features[27] + 6700
         dist = np.sqrt(x ** 2 + y ** 2)
         dota_time = features[56]
-        print("%ds | %d" % (dota_time, dist))
+        print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
 
         self.variables['max_dist'] = max(self.variables['max_dist'], dist)
         self.last_features = features
