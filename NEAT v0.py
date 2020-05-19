@@ -7,11 +7,6 @@ import numpy as np
 from agent_server_NEAT import start_server
 from fitness_evaluator import FitnessEvaluator
 
-# 2-input XOR inputs and expected outputs.
-xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
-xor_outputs = [(0.0,), (1.0,), (1.0,), (0.0,)]
-
-
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
         genome.fitness = 0

@@ -202,8 +202,8 @@ def start_server(decision_func, fitness_evaluator):
     print(response)
 
     """
-        Declare variables global that you want the agent server to have access to.
-        """
+    Declare variables global that you want the agent server to have access to.
+    """
     global breezyIp
     global breezyPort
 

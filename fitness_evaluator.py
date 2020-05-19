@@ -15,8 +15,6 @@ class FitnessEvaluator():
         self.variables = {
             'max_dist': 0
         }
-        print("FitnessEvaluator created")
-        print("Max dist", self.variables['max_dist'])
 
     """
     Evaluate fitness at each frame
@@ -52,3 +50,11 @@ class FitnessEvaluator():
         print("MAX DISTANCE", self.variables['max_dist'])
         self.fitness = self.variables['max_dist']
         return self.fitness
+
+    def reset(self):
+        self.fitness = 0
+        self.last_features = []
+        self.variables = {
+            'max_dist': 0
+        }
+        print("FitnessEvaluator reset")
