@@ -28,9 +28,8 @@ def eval_genomes(genomes, config):
         """
 
         def eval(features):
-            x = features[26] + 10000
-            y = features[27] + 10000
-            return np.sqrt(x ** 2 + y ** 2)
+
+            return
 
         fitness = start_server(decision_func=decision, eval_func=eval)
         print("\nFitness:", fitness, "\n\n")
