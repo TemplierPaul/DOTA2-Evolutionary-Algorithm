@@ -106,5 +106,6 @@ if __name__ == "__main__":
     manager = DotaServerManager()
     manager.start_server()
     manager.play_game()
-    # manager.stop_game()
+    print("\n\nEND OF GAME 1\n\n")
+    manager.play_game()
     manager.stop_server()
