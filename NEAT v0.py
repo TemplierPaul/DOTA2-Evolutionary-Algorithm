@@ -5,6 +5,7 @@ import visualize
 import numpy as np
 
 from agent_server_NEAT import start_server
+from fitness_evaluator import FitnessEvaluator
 
 # 2-input XOR inputs and expected outputs.
 xor_inputs = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
@@ -22,16 +23,7 @@ def eval_genomes(genomes, config):
             print(features[26], features[27], action)
             return action
 
-        """
-        Evaluation function: distance from origin.
-        We add 10000 units to have positive values.
-        """
-
-        def eval(features):
-
-            return
-
-        fitness = start_server(decision_func=decision, eval_func=eval)
+        fitness = start_server(decision_func=decision, fitness_evaluator=FitnessEvaluator())
         print("\nFitness:", fitness, "\n\n")
         genome.fitness = fitness
 

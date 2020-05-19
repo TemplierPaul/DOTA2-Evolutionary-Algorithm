@@ -23,7 +23,7 @@ class FitnessEvaluator():
     @property
     def early_stop(self):
         dota_time = self.last_features[56]
-        if dota_time > 5*60: # Stop at 5min
+        if dota_time > 3 * 60:  # Stop at 3min
             return True
         return False
 
@@ -33,4 +33,5 @@ class FitnessEvaluator():
     def final_evaluation(self, features):
         if features == self.last_features:
             print("LAST FEATURES EVALUATED TWICE")
+        print("MAX DISTANCE", self.fitness)
         return self.fitness
