@@ -162,6 +162,13 @@ class ServerHandler(BaseHTTPRequestHandler):
             self.postResponse(json.dumps({"actionCode": action}))
 
 
+def stop_game():
+    response = requests.delete(
+        url="http://{}:{}/run/active".format(opts.breezyIp, opts.breezyPort))
+
+    print(response)
+
+
 def start_server(decision_func, fitness_evaluator):
     """
         Sets up and starts the Agent server and triggers the start of a run on the
@@ -209,6 +216,8 @@ def start_server(decision_func, fitness_evaluator):
 
     while keep_server_up:
         pass
+
+    stop_game()
 
     return fitness_evaluator.final_evaluation(features)
 
