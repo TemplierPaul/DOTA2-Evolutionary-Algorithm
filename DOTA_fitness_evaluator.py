@@ -24,14 +24,15 @@ class FitnessEvaluator():
         y = features[27] + 6700
         dist = np.sqrt(x ** 2 + y ** 2)
         dota_time = features[56]
-        net_worth = features[23]
 
         self.variables['max_dist'] = max(self.variables['max_dist'], dist)
 
-        self.fitness = net_worth
+        net_worth = features[23]
+        passive_gold = 0.7 * dota_time + 598  # 598 = start gold
+        self.fitness = net_worth - passive_gold
 
         # print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
-        print("%ds | %dg" % (dota_time, net_worth))
+        print("%ds | %dg" % (dota_time, self.fitness))
         self.last_features = features
         return self.fitness
 

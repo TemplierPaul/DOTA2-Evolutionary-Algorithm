@@ -8,8 +8,14 @@ import requests
 
 class DotaServerHandler(BaseHTTPRequestHandler):
     """
-        Helper function to get content passed with http request.
-        """
+    Mute the printing of each request
+    """
+
+    def log_message(self, format, *args):
+        return
+    """
+    Helper function to get content passed with http request.
+    """
 
     def getContent(self):
         cLen = int(self.headers["Content-Length"])

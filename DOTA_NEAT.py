@@ -9,6 +9,7 @@ from DOTA_Server import DotaServerManager
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
+        print("GENOME", genome_id)
         genome.fitness = 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
 
@@ -41,7 +42,7 @@ def run(config_file):
     p.add_reporter(neat.Checkpointer(5))
 
     # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 300)
+    winner = p.run(eval_genomes, 20)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))

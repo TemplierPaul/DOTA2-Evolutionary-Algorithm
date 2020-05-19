@@ -24,9 +24,6 @@ class DotaServer(HTTPServer):
         HTTPServer.__init__(self, (opts.agentIp, int(opts.agentPort)), DotaServerHandler)
         self.manager = manager
 
-    def show(self):
-        print(self.manager.decision_function)
-
 
 class DotaServerManager():
     def __init__(self):
