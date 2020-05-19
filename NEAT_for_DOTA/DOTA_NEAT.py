@@ -4,7 +4,7 @@ import neat
 import visualize
 import numpy as np
 
-from DOTA_NEAT.DOTA_Server import DotaServerManager
+from NEAT_for_DOTA.DOTA_Server import DotaServerManager
 
 
 def eval_genomes(genomes, config):
