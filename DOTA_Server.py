@@ -5,7 +5,7 @@ import threading
 import requests
 
 from DOTA_request_handler import DotaServerHandler
-from fitness_evaluator import FitnessEvaluator
+from DOTA_fitness_evaluator import FitnessEvaluator
 
 parser = OptionParser()
 # the address of this agent server

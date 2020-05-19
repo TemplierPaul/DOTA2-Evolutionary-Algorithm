@@ -5,7 +5,7 @@ import visualize
 import numpy as np
 
 from agent_server_NEAT import start_server
-from fitness_evaluator import FitnessEvaluator
+from DOTA_fitness_evaluator import FitnessEvaluator
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -65,5 +65,5 @@ if __name__ == '__main__':
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-feedforward')
+    config_path = os.path.join(local_dir, 'DOTA_config')
     run(config_path)

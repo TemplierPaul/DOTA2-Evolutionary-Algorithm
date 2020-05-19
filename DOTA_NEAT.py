@@ -13,8 +13,7 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
 
         def decision(features):
-            used_features = features[26:28]
-            output = net.activate(used_features)
+            output = net.activate(features)
             action = int(np.argmax(output))
             return action
 
@@ -59,7 +58,7 @@ if __name__ == '__main__':
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-feedforward')
+    config_path = os.path.join(local_dir, 'DOTA_config')
 
     with DotaServerManager() as server_manager:
         run(config_path)

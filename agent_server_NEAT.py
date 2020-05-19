@@ -5,7 +5,7 @@ import threading
 import random
 import requests
 
-from fitness_evaluator import FitnessEvaluator
+from DOTA_fitness_evaluator import FitnessEvaluator
 
 parser = OptionParser()
 # the address of this agent server
