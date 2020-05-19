@@ -38,6 +38,19 @@ class ServerHandler(BaseHTTPRequestHandler):
         self._decision_func = func
 
     """
+    Fitness evaluator getter and setter
+    """
+
+    @property
+    def fitness_evaluator(self):
+        # assert self._decision_func is not None
+        return self.server._fitness_evaluator
+
+    @fitness_evaluator.setter
+    def fitness_evaluator(self, fe):
+        self._fitness_evaluator = fe
+
+    """
     Helper function to get content passed with http request.
     """
 
@@ -160,7 +173,7 @@ def start_server(decision_func, fitness_evaluator):
 
     # Set GA functions
     agentHandler._decision_func = decision_func
-    agentHandler.fitness_evaluator = fitness_evaluator
+    agentHandler._fitness_evaluator = fitness_evaluator
 
     thread = threading.Thread(target=agentHandler.serve_forever)
     thread.daemon = True
