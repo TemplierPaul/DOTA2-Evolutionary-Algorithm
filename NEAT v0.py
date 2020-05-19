@@ -21,7 +21,6 @@ def eval_genomes(genomes, config):
             used_features = features[26:28]
             output = net.activate(used_features)
             action = int(np.argmax(output))
-            print(features[26], features[27], action)
             return action
 
         fitness = start_server(decision_func=decision, fitness_evaluator=FitnessEvaluator())
