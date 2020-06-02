@@ -16,7 +16,7 @@ class FitnessEvaluator():
         self.fitness = 0
         self.last_features = []
         self.variables = {
-            'min_dist': 0
+            'min_dist': np.inf
         }
 
     """
@@ -35,7 +35,7 @@ class FitnessEvaluator():
         self.fitness = net_worth - passive_gold
 
         # print("%ds | %d | %d" % (dota_time, dist, self.variables['max_dist']))
-        print("%ds | %dg" % (dota_time, self.fitness))
+        print("%ds | %dg | %d" % (dota_time, self.fitness, self.variables['min_dist']))
         self.last_features = features
         return self.fitness
 
@@ -64,6 +64,6 @@ class FitnessEvaluator():
         self.fitness = 0
         self.last_features = []
         self.variables = {
-            'min_dist': 0
+            'min_dist': np.inf
         }
         print("FitnessEvaluator reset")

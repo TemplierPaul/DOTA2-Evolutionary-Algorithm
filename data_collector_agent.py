@@ -73,10 +73,11 @@ class ServerHandler(BaseHTTPRequestHandler):
             print(content)
             rundata = json.loads(content)
 
-            actions.append(content)
+            # states.append(content)
 
+            print("States: %d\nActions: %d" % (len(states), len(actions)))
             df = pd.DataFrame(states)
-            df['action'] = actions
+            df['action'] = actions[:-1]
 
             path = "games_data/rd_%d.csv" % rd.randint(0, 100000)
             df.to_csv(path)
