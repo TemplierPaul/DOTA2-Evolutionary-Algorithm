@@ -83,6 +83,11 @@ class ServerHandler(BaseHTTPRequestHandler):
             df.to_csv(path)
             print('SAVED AS %s' % path)
 
+            states = []
+            actions = [0]
+            df = None
+
+
             # webhook to start new game in existing set of games
             if "webhook" in rundata:
                 """
@@ -115,10 +120,10 @@ class ServerHandler(BaseHTTPRequestHandler):
                     "agent": "Sample Random Agent",
                     "size": 1
                 }
-                # response = requests.post(url=startUrl, data=json.dumps(startData))
+                response = requests.post(url=startUrl, data=json.dumps(startData))
 
             # send whatever to server
-            # self.postResponse(json.dumps({"fitness":42}))
+            self.postResponse(json.dumps({"fitness": 42}))
 
         else:  # relay path gives features from current game to agent
             """
