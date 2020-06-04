@@ -3,6 +3,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import Surrogate.DOTA_Surrogate as sur
+from Surrogate.constant_features import *
 
 # Utils
 import pandas as pd
@@ -23,6 +24,11 @@ from sklearn.metrics import explained_variance_score, mean_squared_error, mean_s
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
 from sklearn.multioutput import MultiOutputRegressor
+
+"""
+Toggle to remove constant features
+"""
+remove_constant_features = True
 
 """
 Cast an action into a 1-hot vector.
@@ -71,10 +77,17 @@ Transforms and scales data into input and output DataFrames, and also returns th
 def transform(df, scaler=None):
     action = actions_to_vect(df['action'])
     state = df.drop(columns=['action'])
+
+    # Remove constant features
+    if remove_constant_features:
+        state = remove_constants(state)
+
+    # Scale
     if scaler is None:
         scaler = StandardScaler()
         scaler.fit(state)
     state = pd.DataFrame(scaler.transform(state))
+
     #     print(state.head())
 
     X = pd.concat([state, action], axis=1, ignore_index=False)
@@ -149,23 +162,23 @@ def train_model(model, X, y):
 
 if __name__ == "__main__":
     # Get paths to data files
-    files = glob.glob("../games_data/*")
+    files = glob.glob("../games_data/rd_cumulated*")
     print(len(files), "data files")
 
     # Import and tranform (limited to the 3 first files for test)
     X, y, scaler = data_pipeline(files=files[:3])
 
     # Define the model to train
-    models = RandomForestRegressor()
+    model_ridge = MultiOutputRegressor(Ridge(random_state=0))
 
-    # To compare multiple models, uncomment this line
+    # To compare multiple models
     models = [RandomForestRegressor(), MultiOutputRegressor(Ridge(random_state=0))]
 
     # Train the model / models
-    train_model(models, X, y)
+    train_model(model_ridge, X, y)
 
     # Create the surrogate from the model
-    surrogate = sur.DOTA2_surrogate(models[1], scaler)
+    surrogate = sur.DOTA2_surrogate(model_ridge, scaler)
 
     # Run the surrogate with a random agent
     state = surrogate.reset()  # Initial state
@@ -180,7 +193,7 @@ if __name__ == "__main__":
         state = surrogate.step(a)
 
         # To print details, uncomment:
-        # surrogate.render()
+        surrogate.render()
 
         # Store data
         t.append(state[56])

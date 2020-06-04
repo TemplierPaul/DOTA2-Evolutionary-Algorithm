@@ -1,4 +1,5 @@
 import Surrogate.preprocessing as prep
+from Surrogate.constant_features import *
 import numpy as np
 import pandas as pd
 
@@ -22,14 +23,34 @@ class DOTA2_surrogate:
         if self.state is None:
             self.reset()
 
-        state_scaled = self.scaler.transform(self.state.reshape(1, -1))
+        # Remove constants
+        if prep.remove_constant_features:
+            state_transformed = remove_constants(self.state)
+        else:
+            state_transformed = self.state
 
+        # Transform state : remove features and scale
+        state_transformed = self.scaler.transform(state_transformed.reshape(1, -1))
+
+        # Transform action into vector
         action_vect = prep.actions_to_vect(action).reshape(1, -1)
 
-        x = np.concatenate([state_scaled, action_vect], axis=1)
+        # Create input for surrogate
+        x = np.concatenate([state_transformed, action_vect], axis=1)
 
+        # Predict next state
         y = self.model.predict(x)
-        self.state = self.scaler.inverse_transform(y)[0]
+
+        # Revert scaling
+        y = self.scaler.inverse_transform(y)[0]
+
+        # Add constant features back
+        if prep.remove_constant_features:
+            y = add_constants(y)
+
+        self.state = y
+
+        # Increment step count
         self.step_nb += 1
         return self.state
 
